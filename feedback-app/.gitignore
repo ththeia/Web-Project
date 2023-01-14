@@ -44,4 +44,4 @@ Thumbs.db
 *.wmv
 
 # Project-specific files
-server/sample.db
++server/database.db
