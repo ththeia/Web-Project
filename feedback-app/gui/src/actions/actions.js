@@ -82,7 +82,7 @@ export function getProfessors(){
   }
 }
 
-export function getFeedback(activityCode, userId) {
+export function getFeedback(activityCode, userId, authorId) {
   return {
     type: 'GET_FEEDBACK',
     payload: async () => {
@@ -90,7 +90,7 @@ export function getFeedback(activityCode, userId) {
       if (userId) {
         whereClause.userId = userId;
       }
-      const response = await fetch(`${SERVER}/activities/${activityCode}/feedback/${userId}`, {
+      const response = await fetch(`${SERVER}/activities/${activityCode}/feedback/${userId}/${authorId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });

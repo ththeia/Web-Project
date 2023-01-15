@@ -5,17 +5,24 @@ import ActivityForm from "./ActivityForm";
 import LoginForm from "./LoginForm";
 import { getAvailableActivities, getProfessors, submitFeedback, getFeedback } from "../actions/actions"
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux'
-import * as moment from 'moment'
+import { useDispatch } from 'react-redux';
+import * as moment from 'moment';
 
 const ActivityAccessForm = () => {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const location = useLocation();
+
+
     const [activities, setActivities] = useState([]);
     const [professors, setProfessors] = useState([]);
     const [selectedActivity, setSelectedActivity] = useState(null);
     const [selectedProfessor, setSelectedProfessor] = useState(null);
     const [selectedReaction, setSelectedReaction] = useState(null);
+
+    const state = location.state || null;
+    const auth = state.user;
 
     const refreshActivities = ()=>{
         dispatch(getAvailableActivities())
@@ -43,10 +50,14 @@ const ActivityAccessForm = () => {
         e.preventDefault();
     }
 
+    function refreshPage() {
+        window.location.reload(false);
+    }
+
     const checkForReaction = (activityCode, userId)=>{
-        dispatch(getFeedback(activityCode, userId)).then((r)=>{
+        console.log(activityCode);
+        dispatch(getFeedback(activityCode, userId, auth.username)).then((r)=>{
             let responseBody = r.value;
-            console.log(responseBody);
             if(responseBody != null && responseBody.length > 0){
                 setSelectedReaction(responseBody[0]);
             }else{
@@ -67,7 +78,9 @@ const ActivityAccessForm = () => {
 
     const react = (reaction) => {
         //dispatch(submitFeedback({userId: user.id, reaction: 'smile', activityId: selectActivity.id}));
-        dispatch(submitFeedback({userId: selectedProfessor, reaction: reaction, activityId: selectedActivity.id}))
+        dispatch(submitFeedback({userId: selectedProfessor, authorId: auth.username, reaction: reaction, activityId: selectedActivity.id})).then(()=>{
+            //refreshPage();
+        });
     }
 
     const emotionToIcon = (emotion) => {
@@ -138,7 +151,7 @@ const ActivityAccessForm = () => {
                             </div>
 
                             {selectedReaction && 
-                                <h4>You already reacted to this teacher, to this activity 
+                                <h4>You already reacted to this teacher, to this activity &rarr;
                                     <i className={'fa-regular ' + emotionToIcon(selectedReaction.reaction)}></i>
                                 </h4>
                             }

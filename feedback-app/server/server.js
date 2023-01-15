@@ -28,7 +28,13 @@ const Activity = sequelize.define('activity', {
 })
 
 const Feedback = sequelize.define('feedback', {
+  id: {
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV4,
+    primaryKey: true,
+  },
   reaction: Sequelize.ENUM("smile", "frown", "surprised", "confused"),
+  authorId: Sequelize.STRING,
 },
 {
   timestamps: true,
@@ -181,14 +187,14 @@ app.post('/activities/:code/feedback', async (req, res) => {
 })
 
 // Get feedback for a given activity.
-app.get('/activities/:code/feedback/:userId', async (req, res) => {
+app.get('/activities/:code/feedback/:userId/:authorId', async (req, res) => {
   try {
     const activity = await Activity.findOne({
       where: {
         accessCode:req.params.code
       }
     })
-    if (activity && req.params.userId) {
+    if (activity && req.params.userId && req.params.authorId) {
       
       const feedback = await Feedback.findAll({
         where: {
@@ -198,6 +204,9 @@ app.get('/activities/:code/feedback/:userId', async (req, res) => {
             },
             {
               userId: req.params.userId
+            },
+            {
+              authorId: req.params.authorId
             }
           ]
         }
@@ -213,6 +222,31 @@ app.get('/activities/:code/feedback/:userId', async (req, res) => {
   }
 })
 
+app.get('/activities/:code/feedback/:userId/count', async (req, res) => {
+  try {
+    const feedback = await Feedback.findAll({
+      attributes: [
+        'reaction',
+        [sequelize.fn('COUNT', sequelize.col('feedback.createdAt')), 'count']
+      ],
+      include: [{
+        model: Activity,
+        where: { accessCode: req.params.code },
+        attributes: []
+      }, {
+        model: User,
+        where: { id: req.params.userId },
+        attributes: []
+      }],
+      group: ['feedback.reaction'],
+    });
+    res.status(200).json(feedback);
+  } catch (e) {
+    console.warn(e);
+    res.status(500).json({ message: e });
+  }
+});
+
 app.post('/feedback', async (req, res) => {
   try {
     // Get the user associated with the feedback
@@ -222,6 +256,7 @@ app.post('/feedback', async (req, res) => {
     // Create the new feedback
     const feedback = await Feedback.create({
       reaction: req.body.reaction,
+      authorId: req.body.authorId,
     });
 
     // Associate the feedback with the user

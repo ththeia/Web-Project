@@ -46,6 +46,24 @@ const ActivityList = () => {
                         <div className="card-body">
                             <p>Start date: {moment(activity.date).format('DD/MM/YYYY hh:mm')}</p>
                             <p>Expiry date: {moment(activity.validUntil).format('DD/MM/YYYY hh:mm')}</p>
+
+                            <div className="row">
+                                <div className="col-3 reaction-button text-center">
+                                    <i className="fa-regular fa-face-smile"></i> (0)
+                                </div>
+
+                                <div className="col-3 reaction-button text-center">
+                                    <i className="fa-regular fa-face-frown"></i> (0)
+                                </div>
+
+                                <div className="col-3 reaction-button text-center">
+                                    <i className="fa-regular fa-face-surprise"></i> (0)
+                                </div>
+
+                                <div className="col-3 reaction-button text-center">
+                                    <i className="fa-regular fa-face-grin-beam-sweat"></i> (0)
+                                </div>
+                            </div>
                         </div>
                       </div>
                     </div>
