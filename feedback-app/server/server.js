@@ -1,6 +1,7 @@
 const express = require('express')
 const Sequelize = require('sequelize')
 const cors = require('cors')
+const { Op } = require("sequelize");
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
@@ -81,6 +82,32 @@ app.post('/activities', async (req, res) => {
 app.get('/activities', async (req, res) => {
   try {
     const activities = await Activity.findAll()
+    res.status(200).json(activities)
+  } catch (e) {
+    console.warn(e)
+    res.status(500).json({ message: e })
+  }
+})
+
+// Gets all available activities.
+app.get('/available-activities', async (req, res) => {
+  try {
+    const activities = await Activity.findAll({
+      where: {
+        [Op.and]: [
+          {
+            date: {
+              [Op.lte]:sequelize.fn('datetime', 'now')
+            }
+          },
+          {
+            validUntil: {
+              [Op.gte]:sequelize.fn('datetime', 'now')
+            }
+          }
+        ]
+      }
+    });
     res.status(200).json(activities)
   } catch (e) {
     console.warn(e)
@@ -195,6 +222,25 @@ app.post('/users', async (req, res) => {
 })
 
 // Gets user by username.
+app.get('/professors', async (req, res) => {
+  try {
+    const users = await User.findAll({
+      where: {
+        role: 'professor'
+      }
+    });
+
+    if (users) {
+      res.status(200).json(users)
+    } else {
+      res.status(404).json({ message: 'not found' })
+    }
+  } catch (e) {
+    console.warn(e)
+    res.status(500).json({ message: e })
+  }
+})
+
 app.get('/users/:username', async (req, res) => {
   try {
     const user = await User.findOne({

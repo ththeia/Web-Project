@@ -60,6 +60,28 @@ export function getActivities(){
   }
 }
 
+export function getAvailableActivities(){
+  return {
+    type: 'GET_ACTIVITIES',
+    payload: async () => {
+      const response = await fetch(`${SERVER}/available-activities`)
+      const data = await response.json()
+      return data
+    }
+  }
+}
+
+export function getProfessors(){
+  return {
+    type: 'GET_PROFESSORS',
+    payload: async () => {
+      const response = await fetch(`${SERVER}/professors`)
+      const data = await response.json()
+      return data
+    }
+  }
+}
+
 export function submitActivity(inputs){
   const requestOptions = {
     method: 'POST',
