@@ -32,6 +32,23 @@ export function login(inputs) {
   }
 }
 
+export function register(inputs){
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(inputs)
+  };
+
+  return {
+    type: 'REGISTER_USER',
+    payload: async () => {
+      const response = await fetch(`${SERVER}/users`, requestOptions)
+      const data = await response.json()
+      return { status: response.status, data: data }
+    }
+  }
+}
+
 export function getActivities(){
   return {
     type: 'GET_ACTIVITIES',

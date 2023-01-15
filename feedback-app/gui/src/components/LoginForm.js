@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useDispatch } from 'react-redux'
 import { useNavigate } from "react-router";
-import { login } from "../actions/actions"
+import { login, register } from "../actions/actions"
 
 function LoginForm () {
     const [content, setContent] = useState('')
@@ -35,17 +35,30 @@ function LoginForm () {
                 username: userName,
                 role: userRole,
             }}})
-
-            //console.log(JSON.stringify(userRole));
-            // ...
         } else {
             let errorMessage = data.message;
-            //console.log(JSON.stringify(errorMessage));
-            // ...
         }
 
       });
     }
+
+    function refreshPage() {
+      window.location.reload(false);
+    }
+
+    const handleRegisterSubmit = (event) => {
+      event.preventDefault();
+      //console.log(inputs);
+      dispatch(register(inputs))
+      .then((r) => {
+        let responseBody = r.value;
+        console.log(responseBody);
+        let statusCode = responseBody.status;
+        let data = responseBody.data;
+
+        refreshPage();
+      });
+    };
 
     return (
       <>
@@ -85,7 +98,7 @@ function LoginForm () {
         </div>
 
         <div className="col-12 col-md-6">
-          <form className="card" autoComplete="false">
+          <form className="card" autoComplete="false" onSubmit={handleRegisterSubmit}>
           <div className="card-header text-center">
               <h3>Sign In</h3>
             </div>
@@ -96,8 +109,8 @@ function LoginForm () {
                 <label>First Name:</label>
                 <input className="form-control"
                   type="text"  placeholder="first name"
-                  name="first_name" 
-                  value={inputs.first_name || ""} 
+                  name="firstName" 
+                  value={inputs.firstName || ""} 
                   onChange={handleChange}
                 />
               </div>
@@ -106,8 +119,8 @@ function LoginForm () {
                 <label>Last Name:</label>
                 <input className="form-control"
                   type="text"  placeholder="last name"
-                  name="first_name" 
-                  value={inputs.first_name || ""} 
+                  name="lastName" 
+                  value={inputs.lastName || ""} 
                   onChange={handleChange}
                 />
               </div>
@@ -135,7 +148,7 @@ function LoginForm () {
               <div className="form-group">
                 <div className="form-check">
                   <label className="form-check-label">
-                    <input type="radio" className="form-check-input" name="role" value="student" onChange={handleChange} />Student
+                    <input type="radio" className="form-check-input" name="role" value="student" onChange={handleChange} checked />Student
                   </label>
                 </div>
                 <div className="form-check">
