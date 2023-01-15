@@ -49,6 +49,7 @@ const User = sequelize.define('user', {
     defaultValue: "student",
   },
 }, {
+  timestamps: false,
   defaultScope: {
     attributes: { exclude: ['password'] },
   }
@@ -258,19 +259,6 @@ app.listen(8080, async () => {
       }
     })
 
-    /*const prof = User.build({ firstName: "El", lastName: "Professor", username: "user1", password: "user1", role: "professor" });
-    const student = User.build({ firstName: "Bob", lastName: "Stamina", username: "user2", password: "user2", role: "student" });
-    const sample = [prof, student]
-    sample.forEach(async (u) => {
-      console.info('creating ' + u.username)
-      try {
-        u.save();
-      }
-      catch (e) {
-        console.error(e);
-      }
-    })
-    */
   } catch (err) {
     console.warn(err)
   }
