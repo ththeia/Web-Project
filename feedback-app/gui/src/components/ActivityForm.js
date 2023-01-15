@@ -23,60 +23,66 @@ function ActivityForm () {
 
     return (
       <>
-      {/*<button
-        onClick={() => {
-          navigate("/");
-        }}
-      >
-        Home
-      </button>*/}
-      <form onSubmit={handleSubmit}>
-      <label>Activity Code:
-      <input 
-        type="text" 
-        name="code" 
-        value={inputs.code || ""} 
-        onChange={handleChange}
-      />
-      </label>
-        <br></br>
-      <label>Description:
-        <input 
-          type="text" 
-          name="description" 
-          value={inputs.description || ""} 
-          onChange={handleChange}
-        />
-        </label>
-        <br></br>
-        <label>Activity Date:
-        <input 
-          type="date" 
-          name="date" 
-          value={inputs.date || ""} 
-          onChange={handleChange}
-        />
-        </label>
-        <br></br>
-        <label>Start Time:
-        <input 
-          type="time" 
-          name="startTime" 
-          value={inputs.startTime || ""} 
-          onChange={handleChange}
-        />
-        </label>
-        <br></br>
-        <label>End Time:
-        <input 
-          type="time" 
-          name="endTime" 
-          value={inputs.endTime || ""} 
-          onChange={handleChange}
-        />
-        </label>
-        <br></br>
-        <input type="submit" />
+            
+      <form class="row" onSubmit={handleSubmit}>
+
+        <div className="form-group col-12">
+          <label>Activity Code:</label>
+          <input 
+            placeholder="Activity Code"
+            class="form-control"
+            type="text" 
+            name="code" 
+            value={inputs.code || ""} 
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group col-12">
+          <label>Description:</label>
+          <input 
+            placeholder="Description"
+            class="form-control"
+            type="text" 
+            name="description" 
+            value={inputs.description || ""} 
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group col-4">
+          <label>Activity Date:</label>
+          <input class="form-control"
+            type="date" 
+            name="date" 
+            value={inputs.date || ""} 
+            onChange={handleChange}
+          />
+        </div>
+        
+        <div className="form-group col-4">
+          <label>Start Time:</label>
+          <input class="form-control"
+            type="time" 
+            name="startTime" 
+            value={inputs.startTime || ""} 
+            onChange={handleChange}
+          />
+        </div>
+        
+        <div className="form-group col-4">
+          <label>End Time:</label>
+          <input class="form-control"
+            type="time" 
+            name="endTime" 
+            value={inputs.endTime || ""} 
+            onChange={handleChange}
+          />
+        </div>
+        
+        <div class="col-12 text-center">
+          <input class="btn btn-success" type="submit" />
+        </div>
     </form>
     </>
     )

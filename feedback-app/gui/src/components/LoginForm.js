@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { useDispatch } from 'react-redux'
 import { useNavigate } from "react-router";
-
 import { login } from "../actions/actions"
 
 function LoginForm () {
@@ -17,7 +16,7 @@ function LoginForm () {
       setInputs(values => ({...values, [name]: value}))
     }
   
-    const handleSubmit = (event) => {
+    const handleLoginSubmit = (event) => {
       event.preventDefault();
       //console.log(inputs);
       dispatch(login(inputs))
@@ -50,27 +49,107 @@ function LoginForm () {
 
     return (
       <>
-      <form onSubmit={handleSubmit}>
-      <label>Username:
-      <input 
-        type="text" 
-        name="username" 
-        value={inputs.username || ""} 
-        onChange={handleChange}
-      />
-      </label>
-        <br></br>
-      <label>Password:
-        <input 
-          type="password" 
-          name="password" 
-          value={inputs.password || ""} 
-          onChange={handleChange}
-        />
-        </label>
-        <br></br>
-        <input type="submit" />
-    </form>
+      <div className="row">
+        <div className="col-12 col-md-6">
+          <form className="card" onSubmit={handleLoginSubmit}>
+            <div className="card-header text-center">
+              <h3>Login</h3>
+            </div>
+
+            <div className="card-body">
+
+              <div className="form-group">
+                <label>Username:</label>
+                <input className="form-control"
+                  type="text" placeholder="username"
+                  name="username" 
+                  value={inputs.username || ""} 
+                  onChange={handleChange}
+                />
+              </div>
+              
+              <div class="form-group">
+                <label>Password:</label>
+                <input className="form-control"
+                  type="password"  placeholder="password"
+                  name="password" 
+                  value={inputs.password || ""} 
+                  onChange={handleChange}
+                />
+              </div>
+
+              <input type="submit" value="Login" className="btn btn-success"/>
+            </div>
+
+          </form>
+        </div>
+
+        <div className="col-12 col-md-6">
+          <form className="card" autoComplete="false">
+          <div className="card-header text-center">
+              <h3>Sign In</h3>
+            </div>
+
+            <div className="card-body">
+
+              <div className="form-group">
+                <label>First Name:</label>
+                <input className="form-control"
+                  type="text"  placeholder="first name"
+                  name="first_name" 
+                  value={inputs.first_name || ""} 
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Last Name:</label>
+                <input className="form-control"
+                  type="text"  placeholder="last name"
+                  name="first_name" 
+                  value={inputs.first_name || ""} 
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Username:</label>
+                <input className="form-control" autoComplete="false"
+                  type="text"  placeholder="username"
+                  name="username" 
+                  value={inputs.username || ""} 
+                  onChange={handleChange}
+                />
+              </div>
+              
+              <div class="form-group">
+                <label>Password:</label>
+                <input className="form-control" autoComplete="false"
+                  type="password"  placeholder="password"
+                  name="password" 
+                  value={inputs.password || ""} 
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div class="form-group">
+                <div className="form-check">
+                  <label className="form-check-label">
+                    <input type="radio" className="form-check-input" name="role" value="student" onChange={handleChange} />Student
+                  </label>
+                </div>
+                <div className="form-check">
+                  <label className="form-check-label">
+                    <input type="radio" className="form-check-input" name="role" value="professor" onChange={handleChange} />Professor
+                  </label>
+                </div>
+              </div>
+
+              <input type="submit" value="Sign In" className="btn btn-success"/>
+            </div>
+          </form>
+        </div>
+      </div>
     </>
     )
   }

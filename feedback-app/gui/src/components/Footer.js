@@ -4,13 +4,15 @@ import {useLocation} from 'react-router-dom';
 import ActivityForm from "./ActivityForm";
 import LoginForm from "./LoginForm";
 
-const ActivityAccessForm = () => {
+const Footer = () => {
 
         return (
             <>
-                
+                <div className="row bg-dark my-2">
+                    
+                </div>
             </>
         );
 }
 
-export default ActivityAccessForm;
+export default Footer;
