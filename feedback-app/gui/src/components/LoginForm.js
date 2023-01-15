@@ -68,7 +68,7 @@ function LoginForm () {
                 />
               </div>
               
-              <div class="form-group">
+              <div className="form-group">
                 <label>Password:</label>
                 <input className="form-control"
                   type="password"  placeholder="password"
@@ -122,7 +122,7 @@ function LoginForm () {
                 />
               </div>
               
-              <div class="form-group">
+              <div className="form-group">
                 <label>Password:</label>
                 <input className="form-control" autoComplete="false"
                   type="password"  placeholder="password"
@@ -132,7 +132,7 @@ function LoginForm () {
                 />
               </div>
 
-              <div class="form-group">
+              <div className="form-group">
                 <div className="form-check">
                   <label className="form-check-label">
                     <input type="radio" className="form-check-input" name="role" value="student" onChange={handleChange} />Student

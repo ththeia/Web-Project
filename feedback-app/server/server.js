@@ -13,10 +13,14 @@ const sequelize = new Sequelize({
 // Entity definitions
 
 const Activity = sequelize.define('activity', {
-  accessCode: {
+  id: {
     type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true,
+  },
+  accessCode: {
+    type: Sequelize.STRING,
+    unique: true
   },
   description: Sequelize.STRING,
   date: Sequelize.DATE,

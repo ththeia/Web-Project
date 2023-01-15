@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { useDispatch } from 'react-redux'
 import { useNavigate } from "react-router";
+import ActivityList from './ActivityList'
+import { submitActivity } from "../actions/actions"
 
 function ActivityForm () {
     const [content, setContent] = useState('')
@@ -14,77 +16,94 @@ function ActivityForm () {
       const value = event.target.value;
       setInputs(values => ({...values, [name]: value}))
     }
+
+    function refreshPage() {
+      window.location.reload(false);
+    }
   
     const handleSubmit = (event) => {
       event.preventDefault();
-      console.log(inputs);
-      
+      document.getElementById("create-activity-form").reset();
+
+      dispatch(submitActivity(inputs))
+      .then((r) => {
+        let responseBody = r.value;
+        let statusCode = responseBody.status;
+        let data = responseBody.data;
+        refreshPage();
+      });
     }
 
     return (
       <>
-            
-      <form className="row" onSubmit={handleSubmit}>
+        <div className="row">
 
-        <div className="form-group col-12">
-          <label>Activity Code:</label>
-          <input 
-            placeholder="Activity Code"
-            className="form-control"
-            type="text" 
-            name="code" 
-            value={inputs.code || ""} 
-            onChange={handleChange}
-          />
-        </div>
+          <div className="col-12 col-md-6">
+            <ActivityList/>
+          </div>
 
-        <div className="form-group col-12">
-          <label>Description:</label>
-          <input 
-            placeholder="Description"
-            className="form-control"
-            type="text" 
-            name="description" 
-            value={inputs.description || ""} 
-            onChange={handleChange}
-          />
-        </div>
+          <div className="col-12 col-md-6">
+            <div className="card">
+              <div className="card-header">
+                <h3>Add Activity</h3>
+              </div>
 
-        <div className="form-group col-4">
-          <label>Activity Date:</label>
-          <input className="form-control"
-            type="date" 
-            name="date" 
-            value={inputs.date || ""} 
-            onChange={handleChange}
-          />
+              <div className="card-body">
+                <form className="row" id="create-activity-form" onSubmit={handleSubmit}>
+
+                  <div className="form-group col-12 col-md-6">
+                    <label>Activity Code:</label>
+                    <input 
+                      placeholder="Activity Code"
+                      className="form-control"
+                      type="text" 
+                      name="accessCode" 
+                      value={inputs.accessCode || ""} 
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="form-group col-12 col-md-6">
+                    <label>Description:</label>
+                    <input 
+                      placeholder="Description"
+                      className="form-control"
+                      type="text" 
+                      name="description" 
+                      value={inputs.description || ""} 
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="form-group col-12 col-md-6">
+                    <label>Start Time:</label>
+                    <input className="form-control"
+                      type="datetime-local" 
+                      name="date" 
+                      value={inputs.date || ""} 
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="form-group col-12 col-md-6">
+                    <label>End Time:</label>
+                    <input className="form-control"
+                      type="datetime-local" 
+                      name="validUntil" 
+                      value={inputs.validUntil || ""} 
+                      onChange={handleChange}
+                    />
+                  </div>
+                  
+                  <div className="col-12 text-center">
+                    <input className="btn btn-success" type="submit" />
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-        
-        <div className="form-group col-4">
-          <label>Start Time:</label>
-          <input className="form-control"
-            type="time" 
-            name="startTime" 
-            value={inputs.startTime || ""} 
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div className="form-group col-4">
-          <label>End Time:</label>
-          <input className="form-control"
-            type="time" 
-            name="endTime" 
-            value={inputs.endTime || ""} 
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div className="col-12 text-center">
-          <input className="btn btn-success" type="submit" />
-        </div>
-    </form>
-    </>
+      </>
     )
   }
   

@@ -11,7 +11,7 @@ function App () {
     <>
       <BrowserRouter>
         <Menu />
-        <div className="container" style={{minHeight: "100vh"}}>
+        <div className="container" style={{minHeight: "90vh"}}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginForm />} />
