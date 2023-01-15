@@ -24,13 +24,13 @@ function ActivityForm () {
     return (
       <>
             
-      <form class="row" onSubmit={handleSubmit}>
+      <form className="row" onSubmit={handleSubmit}>
 
         <div className="form-group col-12">
           <label>Activity Code:</label>
           <input 
             placeholder="Activity Code"
-            class="form-control"
+            className="form-control"
             type="text" 
             name="code" 
             value={inputs.code || ""} 
@@ -42,7 +42,7 @@ function ActivityForm () {
           <label>Description:</label>
           <input 
             placeholder="Description"
-            class="form-control"
+            className="form-control"
             type="text" 
             name="description" 
             value={inputs.description || ""} 
@@ -52,7 +52,7 @@ function ActivityForm () {
 
         <div className="form-group col-4">
           <label>Activity Date:</label>
-          <input class="form-control"
+          <input className="form-control"
             type="date" 
             name="date" 
             value={inputs.date || ""} 
@@ -62,7 +62,7 @@ function ActivityForm () {
         
         <div className="form-group col-4">
           <label>Start Time:</label>
-          <input class="form-control"
+          <input className="form-control"
             type="time" 
             name="startTime" 
             value={inputs.startTime || ""} 
@@ -72,7 +72,7 @@ function ActivityForm () {
         
         <div className="form-group col-4">
           <label>End Time:</label>
-          <input class="form-control"
+          <input className="form-control"
             type="time" 
             name="endTime" 
             value={inputs.endTime || ""} 
@@ -80,8 +80,8 @@ function ActivityForm () {
           />
         </div>
         
-        <div class="col-12 text-center">
-          <input class="btn btn-success" type="submit" />
+        <div className="col-12 text-center">
+          <input className="btn btn-success" type="submit" />
         </div>
     </form>
     </>
