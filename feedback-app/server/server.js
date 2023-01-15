@@ -21,7 +21,6 @@ const Activity = sequelize.define('activity', {
   },
   accessCode: {
     type: Sequelize.STRING,
-    unique: true
   },
   description: Sequelize.STRING,
   date: Sequelize.DATE,
@@ -35,9 +34,6 @@ const Feedback = sequelize.define('feedback', {
   timestamps: true,
   createdAt: true,
   updatedAt: false, // feedback entries cannot be updated, so we do not need this field.
-  defaultScope: {
-    attributes: { exclude: ['activityAccessCode'] },
-  }
 })
 
 const User = sequelize.define('user', {
@@ -185,14 +181,25 @@ app.post('/activities/:code/feedback', async (req, res) => {
 })
 
 // Get feedback for a given activity.
-app.get('/activities/:code/feedback', async (req, res) => {
+app.get('/activities/:code/feedback/:userId', async (req, res) => {
   try {
-    const activity = await Activity.findByPk(req.params.code)
-    if (activity) {
-
+    const activity = await Activity.findOne({
+      where: {
+        accessCode:req.params.code
+      }
+    })
+    if (activity && req.params.userId) {
+      
       const feedback = await Feedback.findAll({
         where: {
-          activityCode: req.params.code
+          [Op.and]: [
+            {
+              activityId: activity.id
+            },
+            {
+              userId: req.params.userId
+            }
+          ]
         }
       });
 
@@ -205,6 +212,27 @@ app.get('/activities/:code/feedback', async (req, res) => {
     res.status(500).json({ message: e })
   }
 })
+
+app.post('/feedback', async (req, res) => {
+  try {
+    // Get the user associated with the feedback
+    const user = await User.findByPk(req.body.userId);
+    const activity = await Activity.findByPk(req.body.activityId);
+
+    // Create the new feedback
+    const feedback = await Feedback.create({
+      reaction: req.body.reaction,
+    });
+
+    // Associate the feedback with the user
+    await user.addFeedback(feedback);
+    await activity.addFeedback(feedback);
+
+    res.status(201).json({ feedback });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 
 
@@ -289,10 +317,11 @@ app.listen(8080, async () => {
     Activity.hasMany(Feedback, {
       onDelete: 'CASCADE'
     });
-    Feedback.belongsTo(Activity, {
-      foreignKey: 'activityCode',
-      allowNull: false
-    });
+
+    Feedback.belongsTo(Activity);
+
+    User.hasMany(Feedback);
+    Feedback.belongsTo(User);
 
     await sequelize.sync({ alter: true })
     console.warn('created tables')

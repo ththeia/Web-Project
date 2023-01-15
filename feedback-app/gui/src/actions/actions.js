@@ -82,6 +82,26 @@ export function getProfessors(){
   }
 }
 
+export function getFeedback(activityCode, userId) {
+  return {
+    type: 'GET_FEEDBACK',
+    payload: async () => {
+      let whereClause = {activityCode};
+      if (userId) {
+        whereClause.userId = userId;
+      }
+      const response = await fetch(`${SERVER}/activities/${activityCode}/feedback/${userId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        return data;
+      }
+    }
+  }
+}
+
 export function submitActivity(inputs){
   const requestOptions = {
     method: 'POST',
@@ -93,6 +113,23 @@ export function submitActivity(inputs){
     type: 'SUBMIT_ACTIVITY',
     payload: async () => {
       const response = await fetch(`${SERVER}/activities`, requestOptions)
+      const data = await response.json()
+      return { status: response.status, data: data }
+    }
+  }
+}
+
+export function submitFeedback(inputs) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(inputs)
+  };
+
+  return {
+    type: 'SUBMIT_FEEDBACK',
+    payload: async () => {
+      const response = await fetch(`${SERVER}/feedback`, requestOptions)
       const data = await response.json()
       return { status: response.status, data: data }
     }
