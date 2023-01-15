@@ -224,22 +224,8 @@ app.get('/activities/:code/feedback/:userId/:authorId', async (req, res) => {
 
 app.get('/activities/:code/feedback/:userId/count', async (req, res) => {
   try {
-    const feedback = await Feedback.findAll({
-      attributes: [
-        'reaction',
-        [sequelize.fn('COUNT', sequelize.col('feedback.createdAt')), 'count']
-      ],
-      include: [{
-        model: Activity,
-        where: { accessCode: req.params.code },
-        attributes: []
-      }, {
-        model: User,
-        where: { id: req.params.userId },
-        attributes: []
-      }],
-      group: ['feedback.reaction'],
-    });
+    const feedback = await Feedback.findAll();
+
     res.status(200).json(feedback);
   } catch (e) {
     console.warn(e);
@@ -358,7 +344,7 @@ app.listen(8080, async () => {
     User.hasMany(Feedback);
     Feedback.belongsTo(User);
 
-    await sequelize.sync({ alter: true })
+    await sequelize.sync({alter: true,})
     console.warn('created tables')
 
     await User.findOrCreate({

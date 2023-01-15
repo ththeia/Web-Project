@@ -79,7 +79,7 @@ const ActivityAccessForm = () => {
     const react = (reaction) => {
         //dispatch(submitFeedback({userId: user.id, reaction: 'smile', activityId: selectActivity.id}));
         dispatch(submitFeedback({userId: selectedProfessor, authorId: auth.username, reaction: reaction, activityId: selectedActivity.id})).then(()=>{
-            //refreshPage();
+            refreshPage();
         });
     }
 
