@@ -102,6 +102,26 @@ export function getFeedback(activityCode, userId, authorId) {
   }
 }
 
+export function getFeedbackReaction(activityCode, userId) {
+  return {
+    type: 'GET_FEEDBACK_REACTION',
+    payload: async () => {
+      let whereClause = {activityCode};
+      if (userId) {
+        whereClause.userId = userId;
+      }
+      const response = await fetch(`${SERVER}/activities-count/${activityCode}/feedback/${userId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        return data;
+      }
+    }
+  }
+}
+
 export function submitActivity(inputs){
   const requestOptions = {
     method: 'POST',

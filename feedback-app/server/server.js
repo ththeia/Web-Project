@@ -222,16 +222,39 @@ app.get('/activities/:code/feedback/:userId/:authorId', async (req, res) => {
   }
 })
 
-app.get('/activities/:code/feedback/:userId/count', async (req, res) => {
+app.get('/activities-count/:code/feedback/:userId', async (req, res) => {
   try {
-    const feedback = await Feedback.findAll();
-
-    res.status(200).json(feedback);
+    const activity = await Activity.findOne({
+      where: {
+        accessCode: req.params.code
+      }
+    });
+    
+    const user = await User.findOne({
+      where: {
+        username: req.params.userId
+      }
+    });
+    if (activity && user) {
+      console.log(req.params.userId);  
+      const feedback = await Feedback.findAll({
+        where: {
+          activityId: activity.id,
+          userId: user.id
+        },
+        attributes: ['reaction', [sequelize.fn('COUNT', 'reaction'), 'count']],
+        group: ['reaction']
+      });
+      res.status(200).json(feedback);
+    } else {
+      res.status(404).json({ message: 'activity not found' });
+    }
   } catch (e) {
     console.warn(e);
     res.status(500).json({ message: e });
   }
 });
+
 
 app.post('/feedback', async (req, res) => {
   try {
@@ -358,6 +381,24 @@ app.listen(8080, async () => {
         firstName: "Bob", lastName: "Stamina", username: "user2", password: "user2", role: "student"
       }
     })
+
+    await Activity.findOrCreate({
+      where: {
+        accessCode: "ABC123",
+        description: "Math 101",
+        date: new Date(2022, 11, 31),
+        validUntil: new Date(2023, 11, 31)
+      }
+    });
+
+    await Activity.findOrCreate({
+      where: {
+        accessCode: "DEF456",
+        description: "Physics 101",
+        date: new Date(2022, 11, 31),
+        validUntil: new Date(2023, 11, 31)
+      }
+    });
 
   } catch (err) {
     console.warn(err)

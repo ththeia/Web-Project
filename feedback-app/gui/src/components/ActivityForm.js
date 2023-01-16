@@ -1,15 +1,19 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useDispatch } from 'react-redux'
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import ActivityList from './ActivityList'
 import { submitActivity } from "../actions/actions"
 
 function ActivityForm () {
     const [content, setContent] = useState('')
     const [inputs, setInputs] = useState({});
+    const [auth, setAuth] = useState(null);
   
     const navigate = useNavigate();
     const dispatch = useDispatch()
+
+    const location = useLocation();
+    const state = location.state || null;
   
     const handleChange = (event) => {
       const name = event.target.name;
@@ -20,6 +24,10 @@ function ActivityForm () {
     function refreshPage() {
       window.location.reload(false);
     }
+
+    useEffect(()=>{
+      setAuth(state.user);
+    }, []);
   
     const handleSubmit = (event) => {
       event.preventDefault();
@@ -39,7 +47,7 @@ function ActivityForm () {
         <div className="row">
 
           <div className="col-12 col-md-6">
-            <ActivityList/>
+            <ActivityList user={ auth } />
           </div>
 
           <div className="col-12 col-md-6">

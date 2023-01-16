@@ -14,7 +14,6 @@ const ActivityAccessForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-
     const [activities, setActivities] = useState([]);
     const [professors, setProfessors] = useState([]);
     const [selectedActivity, setSelectedActivity] = useState(null);
