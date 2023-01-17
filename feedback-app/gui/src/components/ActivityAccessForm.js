@@ -78,7 +78,7 @@ const ActivityAccessForm = () => {
     const react = (reaction) => {
         //dispatch(submitFeedback({userId: user.id, reaction: 'smile', activityId: selectActivity.id}));
         dispatch(submitFeedback({userId: selectedProfessor, authorId: auth.username, reaction: reaction, activityId: selectedActivity.id})).then(()=>{
-            refreshPage();
+            //refreshPage();
         });
     }
 
@@ -149,13 +149,9 @@ const ActivityAccessForm = () => {
                                 </select>
                             </div>
 
-                            {selectedReaction && 
-                                <h4>You already reacted to this teacher, to this activity &rarr;
-                                    <i className={'fa-regular ' + emotionToIcon(selectedReaction.reaction)}></i>
-                                </h4>
-                            }
 
-                            {!selectedReaction &&
+
+                      
                             <div className="form-group">
                                 <div className="row w-100 px-0 mx-0">
 
@@ -197,7 +193,7 @@ const ActivityAccessForm = () => {
 
                                 </div>
                             </div>
-                            }
+                            
                         </form>
                     }
                     {!selectedActivity && 
