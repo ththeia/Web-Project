@@ -135,8 +135,23 @@ app.get('/activities/:code', async (req, res) => {
   try {
     const activity = await Activity.findOne({
       where: {
-        accessCode: req.params.code
+        [Op.and]: [
+          {
+            date: {
+              [Op.lte]:sequelize.fn('datetime', 'now')
+            }
+          },
+          {
+            validUntil: {
+              [Op.gte]:sequelize.fn('datetime', 'now')
+            }
+          },
+          {
+            accessCode: req.params.code
+          }
+        ]
       }
+      
     })
     if (activity) {
       res.status(200).json(activity)
