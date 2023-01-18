@@ -3,7 +3,7 @@ import {useLocation} from 'react-router-dom';
 //import { getUser } from '../actions/actions'
 import ActivityForm from "./ActivityForm";
 import LoginForm from "./LoginForm";
-import { getAvailableActivities, getProfessors, submitFeedback, getFeedback } from "../actions/actions"
+import { getAvailableActivities, getActivityByAccessCode, getProfessors, submitFeedback, getFeedback } from "../actions/actions"
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import * as moment from 'moment';
@@ -14,6 +14,7 @@ const ActivityAccessForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const [inputs, setInputs] = useState({});
     const [activities, setActivities] = useState([]);
     const [professors, setProfessors] = useState([]);
     const [selectedActivity, setSelectedActivity] = useState(null);
@@ -65,9 +66,25 @@ const ActivityAccessForm = () => {
         });
     };
 
+    const handleChange = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setInputs(values => ({...values, [name]: value}))
+    }
+
     const selectActivity = (activity) => {
         setSelectedActivity(activity);
         checkForReaction(activity.accessCode, selectedProfessor);
+    }
+
+    const selectActivityAccessCode = (e) => {
+        console.log(inputs.code);
+        dispatch(getActivityByAccessCode(inputs.code)).then((r)=>{
+            if(!r.message || r.message != 'not found'){
+                setSelectedActivity(r.value);
+                checkForReaction(r.value, selectedProfessor);
+            }
+        });
     }
 
     const handleProfessorSelect = (e)=>{
@@ -100,8 +117,8 @@ const ActivityAccessForm = () => {
     return (
         <>
             <div className="row">
-                <div className="col-12 col-md-6">
-                    <div id="activities">
+                <div className="col-12 mb-2">
+                    {/*<div id="activities">
                         {activities.map(activity => (
                             <div className="card mb-2" key={activity.id}>
                             <div className="card-header">
@@ -121,9 +138,18 @@ const ActivityAccessForm = () => {
                             </div>
                             </div>
                         ))}
+                                </div>*/}
+                            
+                    <div className="row">
+                        <div className="col-12 col-md-9">
+                            <input type="text" placeholder="Access Code" name="code" value={inputs.code || ""} onChange={handleChange} className="form-control" />
+                        </div>
+                        <div className="col-12 col-md-3">
+                            <button className="btn btn-success w-100" onClick={selectActivityAccessCode}>Select</button>
+                        </div>
                     </div>
                 </div>
-                <div className="col-12 col-md-6">
+                <div className="col-12">
                     {selectedActivity && 
                         <form>
                             <div className="card mb-2" key={selectedActivity.id}>

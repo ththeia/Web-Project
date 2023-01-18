@@ -133,7 +133,11 @@ app.get('/available-activities', async (req, res) => {
 // Gets activity by code.
 app.get('/activities/:code', async (req, res) => {
   try {
-    const activity = await Activity.findByPk(req.params.code)
+    const activity = await Activity.findOne({
+      where: {
+        accessCode: req.params.code
+      }
+    })
     if (activity) {
       res.status(200).json(activity)
     } else {

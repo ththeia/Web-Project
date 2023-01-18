@@ -102,6 +102,22 @@ export function getFeedback(activityCode, userId, authorId) {
   }
 }
 
+export function getActivityByAccessCode(code) {
+  return {
+    type: 'GET_ACTIVITY_BY_ACCESS_CODE',
+    payload: async () => {
+      const response = await fetch(`${SERVER}/activities/${code}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        return data;
+      }
+    }
+  }
+}
+
 export function getFeedbackReaction(activityCode, userId) {
   return {
     type: 'GET_FEEDBACK_REACTION',
