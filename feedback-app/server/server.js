@@ -1,8 +1,12 @@
+//imports the Express.js framework to create and manage the server.
 const express = require('express')
+//
 const Sequelize = require('sequelize')
 const cors = require('cors')
+// imports the Op object from the Sequelize module, which allows for more advanced operations in querying the database.
 const { Op } = require("sequelize");
-
+//new instance  used to connect to and interact with the database.
+//creating the data base
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: 'database.db',
@@ -12,7 +16,7 @@ const sequelize = new Sequelize({
 })
 
 // Entity definitions
-
+//creates the entity activity
 const Activity = sequelize.define('activity', {
   id: {
     type: Sequelize.UUID,
@@ -27,6 +31,7 @@ const Activity = sequelize.define('activity', {
   validUntil: Sequelize.DATE,
 })
 
+//creates the entity feedback
 const Feedback = sequelize.define('feedback', {
   id: {
     type: Sequelize.UUID,
@@ -42,6 +47,7 @@ const Feedback = sequelize.define('feedback', {
   updatedAt: false, // feedback entries cannot be updated, so we do not need this field.
 })
 
+//creates athe user entity
 const User = sequelize.define('user', {
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING,
@@ -62,7 +68,7 @@ const User = sequelize.define('user', {
   }
 })
 
-
+//creating an instance of Express.js
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -72,21 +78,28 @@ app.use(express.json())
 // Creates activity.
 app.post('/activities', async (req, res) => {
   try {
+    //creates a new activity
     const newActivity = await Activity.create(req.body)
+   //sends a json response and the new created activity
     res.status(201).json(newActivity)
   } catch (e) {
     console.warn(e)
+     //json message status and object
     res.status(500).json({ message: e })
   }
 })
 
 // Gets all activities.
+//creates a new endpoint
 app.get('/activities', async (req, res) => {
   try {
+    //get all activities
     const activities = await Activity.findAll()
+    //json message status and object -- OK
     res.status(200).json(activities)
   } catch (e) {
     console.warn(e)
+    //json message status and object [ Internal server error]
     res.status(500).json({ message: e })
   }
 })
@@ -167,10 +180,12 @@ app.delete('/activities/:code', async (req, res) => {
 // Creates a new feedback instance for a given activity.
 app.post('/activities/:code/feedback', async (req, res) => {
   try {
+    //looks up the activity
     const activity = await Activity.findByPk(req.params.code)
     if (activity) {
+      //takes the reaction
       const reaction = req.body.reaction;
-
+      //creates a new feedback instance 
       const newFeedback = await Feedback.create({
         activityCode: req.params.code,
         reaction: reaction,
@@ -194,6 +209,7 @@ app.get('/activities/:code/feedback/:userId/:authorId', async (req, res) => {
         accessCode:req.params.code
       }
     })
+    //looks for the existance of thr activity,user authorid
     if (activity && req.params.userId && req.params.authorId) {
       
       const feedback = await Feedback.findAll({
@@ -222,14 +238,17 @@ app.get('/activities/:code/feedback/:userId/:authorId', async (req, res) => {
   }
 })
 
+//defines and endpoint after the endpoint is acces the
 app.get('/activities-count/:code/feedback/:userId', async (req, res) => {
   try {
+    //finds an activity using the activity code
     const activity = await Activity.findOne({
       where: {
         accessCode: req.params.code
       }
     });
-    
+
+//Find the user 
     const user = await User.findOne({
       where: {
         username: req.params.userId
